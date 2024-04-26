@@ -1,15 +1,16 @@
-# Напишите программу, которая создает нить. Родительская и вновь созданная нити должны распечатать десять строк текста.
-
 import threading
 
-def print_lines():
+# Функция, которую будет выполнять нить
+def print_ten_lines():
     for i in range(10):
-        print(f"Дочерний поток {i+1}")
+        print("This is line", i+1)
 
-thread = threading.Thread(target=print_lines)
+# Создание новой нити
+thread = threading.Thread(target=print_ten_lines)
+
+# Запуск нити
 thread.start()
 
+# Главная нить также будет печатать десять строк текста
 for i in range(10):
-    print(f"Главный поток {i+1}")
-
-thread.join()
+    print("This is line", i+1)
