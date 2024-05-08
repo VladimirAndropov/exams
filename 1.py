@@ -14,3 +14,4 @@ thread.start()
 # Главная нить также будет печатать десять строк текста
 for i in range(10):
     print("This is line", i+1)
+ 
