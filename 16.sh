@@ -1,0 +1,1 @@
+ps axo pid,rss,cmd --sort=-rss | head -n 11 | tail -n +2
