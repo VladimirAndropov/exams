@@ -1,3 +1,5 @@
+# Этот сценарий принимает два аргумента командной строки: начальное и конечное значения диапазона. Затем он выводит все числа в этом диапазоне, которые делятся на 12. Если аргументы заданы некорректно (например, не являются целыми числами или начальное значение больше конечного), выводится соответствующее сооб
+
 import sys
 
 def print_numbers_divisible_by_12(start, end):
@@ -8,8 +10,9 @@ def print_numbers_divisible_by_12(start, end):
             print("Error: Start value should be less than end value.")
             return
         print("Numbers divisible by 12 in the range from", start, "to", end, ":")
-        for num in range(start + (12 - start % 12), end + 1, 12):
-            print(num)
+        for num in range(start, end + 1):
+            if num % 12 == 0:
+                print(num)
     except ValueError:
         print("Error: Invalid input. Please provide integer values for start and end.")
 

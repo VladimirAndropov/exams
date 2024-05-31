@@ -10,14 +10,14 @@ def load_url(url):
     except Exception as e:
         print(f"Error loading {url}: {e}")
 
-# Функция для создания и запуска потоков для загрузки URL
+# Функция для создания и запуска нитей для загрузки URL
 def start_threads(urls):
     threads = []
     for url in urls:
         thread = threading.Thread(target=load_url, args=(url,))
         threads.append(thread)
         thread.start()
-    # Ожидание завершения всех потоков
+    # Ожидание завершения всех нитей
     for thread in threads:
         thread.join()
 
