@@ -24,7 +24,4 @@ find "$directory" -type f -size "${size}c" | while IFS= read -r file; do
     # Выводим имя файла
     echo "$file"
 done
-        sys.exit(1)
-
-    # Обход файлов в указанной директории и ее поддиректориях
-    find_files_by_size(directory, size)
+      
