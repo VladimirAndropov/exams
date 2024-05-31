@@ -1,3 +1,6 @@
+# Эта программа использует многопроцессорность для проверки чисел на простоту. Она создает процесс, который запускает функцию `check_prime_process` для проверки чисел на простоту в отдельном процессе. Результаты проверки добавляются в очередь, из которой основной процесс выводит простые числа по мере их обнаружения. Программа останавливается при нажатии пользователем Ctrl+C.
+
+
 import multiprocessing
 import time
 import sys
@@ -27,22 +30,18 @@ if __name__ == "__main__":
     # Создание очереди для результатов
     results = multiprocessing.Queue()
 
-    # Создание пула процессов
-    pool = multiprocessing.Pool()
+    # Создание и запуск процесса для проверки чисел на простоту
+    process = multiprocessing.Process(target=check_prime_process, args=(0, sys.maxsize, results))
+    process.start()
 
     try:
+        # Ожидание и вывод результатов
         while True:
-            # Запуск проверки чисел на простоту в нескольких процессах
-            pool.starmap(check_prime_process, [(i*10000, (i+1)*10000, results) for i in range(multiprocessing.cpu_count())])
-            
-            # Вывод результатов
-            while not results.empty():
+            if not results.empty():
                 prime_number = results.get()
                 print("Found prime number:", prime_number)
-            
             time.sleep(0.1)  # Задержка для уменьшения нагрузки на процессор
-
     except KeyboardInterrupt:
         # Прерывание программы по нажатию Ctrl+C
         print("Program stopped by user.")
-        pool.terminate()
+        process.terminate()

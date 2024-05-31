@@ -1,1 +1,0 @@
-please, follow instagram: FUvsGPT
