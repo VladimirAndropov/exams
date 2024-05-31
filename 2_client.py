@@ -1,17 +1,17 @@
-import socket
+import asyncio
 
-# Создание сокета
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+async def tcp_client():
+    reader, writer = await asyncio.open_connection('localhost', 8888)
 
-# Подключение к серверу
-client_socket.connect(('localhost', 8888))
+    message = "Hello, server!"
+    print(f'Send: {message}')
+    writer.write(message.encode())
 
-# Отправка данных серверу
-client_socket.sendall(b"Hello, server!")
+    data = await reader.read(1024)
+    print(f'Received: {data.decode()}')
 
-# Получение данных от сервера
-data = client_socket.recv(1024)
-print("Received from server:", data.decode())
+    print('Close the connection')
+    writer.close()
+    await writer.wait_closed()
 
-# Закрытие соединения
-client_socket.close()
+asyncio.run(tcp_client())

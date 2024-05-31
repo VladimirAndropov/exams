@@ -1,4 +1,4 @@
-import threading
+import concurrent.futures
 import requests
 import sys
 
@@ -10,16 +10,13 @@ def load_url(url):
     except Exception as e:
         print(f"Error loading {url}: {e}")
 
-# Функция для создания и запуска нитей для загрузки URL
-def start_threads(urls):
-    threads = []
-    for url in urls:
-        thread = threading.Thread(target=load_url, args=(url,))
-        threads.append(thread)
-        thread.start()
-    # Ожидание завершения всех нитей
-    for thread in threads:
-        thread.join()
+def main(urls):
+    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+        # Запуск загрузки URL в параллельном режиме
+        futures = [executor.submit(load_url, url) for url in urls]
+        # Ожидание завершения всех задач
+        for future in concurrent.futures.as_completed(futures):
+            future.result()  # Получение результата задачи для обработки исключений
 
 if __name__ == "__main__":
     # Проверка наличия аргументов командной строки
@@ -30,5 +27,5 @@ if __name__ == "__main__":
     # Получение списка URL из аргументов командной строки
     urls = sys.argv[1:]
 
-    # Запуск загрузки URL в многопоточном режиме
-    start_threads(urls)
+    # Запуск загрузки URL
+    main(urls)

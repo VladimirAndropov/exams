@@ -1,16 +1,20 @@
 import threading
 
 # Функция, которую будет выполнять нить
-def print_ten_lines():
+def print_ten_lines(source):
     for i in range(10):
-        print("This is line", i+1)
+        print(f"{source}: This is line {i+1}")
 
 # Создание новой нити
-thread = threading.Thread(target=print_ten_lines)
+thread1 = threading.Thread(target=print_ten_lines, args=("Thread 1",))
+thread2 = threading.Thread(target=print_ten_lines, args=("Thread 2",))
 
-# Запуск нити
-thread.start()
+# Запуск нитей
+thread1.start()
+thread2.start()
 
-# Главная нить также будет печатать десять строк текста
-for i in range(10):
-    print("This is line", i+1)
+# Ожидание завершения нитей
+thread1.join()
+thread2.join()
+
+print("All threads completed")

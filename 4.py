@@ -1,29 +1,27 @@
-import sys
+import concurrent.futures
 import requests
+import sys
 
-def simple_http_client(url):
+# Функция для загрузки URL
+def load_url(url):
     try:
-        # Отправка GET-запроса по указанному URL
         response = requests.get(url)
-
-        # Проверка статуса ответа
-        if response.status_code == 200:
-            # Вывод тела ответа на терминал
-            print("Response Body:")
-            print(response.text)
-        else:
-            print(f"Failed to fetch URL: {response.status_code}")
-    except requests.RequestException as e:
-        print(f"Error fetching URL: {e}")
+        print(f"Loaded {url} with status code {response.status_code}")
+    except Exception as e:
+        print(f"Error loading {url}: {e}")
 
 if __name__ == "__main__":
-    # Проверка наличия аргумента командной строки (URL)
-    if len(sys.argv) != 2:
-        print("Usage: python http_client.py <URL>")
+    # Проверка наличия аргументов командной строки
+    if len(sys.argv) < 2:
+        print("Usage: python downloader.py url1 url2 url3 ...")
         sys.exit(1)
 
-    # Получение URL из аргумента командной строки
-    url = sys.argv[1]
+    # Получение списка URL из аргументов командной строки
+    urls = sys.argv[1:]
 
-    # Вызов функции для отправки запроса и вывода ответа
-    simple_http_client(url)
+    # Создание пула потоков с максимальным количеством равным количеству URL
+    with concurrent.futures.ThreadPoolExecutor(max_workers=len(urls)) as executor:
+        # Подача задач на загрузку URL в пул потоков
+        futures = [executor.submit(load_url, url) for url in urls]
+        # Ожидание завершения всех задач
+        concurrent.futures.wait(futures)
